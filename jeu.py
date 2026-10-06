@@ -3,46 +3,74 @@ from tkinter import messagebox
 Largeur = 1024
 Hauteur = 768
 
-def Apropos():
-    messagebox.showinfo('A propos', 'Développé par Nemo et Léandre ')
+class Jeu:
+    def __init__(self):
 
-Fen = Tk()
-Fen.title('Jeux casse brique')
+        self.Fen = Tk()
+        self.Fen.title('Jeux casse brique')
+        self.Score = 0
+        self.Vie = 3
 
-menubar = Menu(Fen)
-menujeu= Menu(menubar, tearoff= 0)
-menujeu.add_command(label= 'Commencer')
-menujeu.add_command(label = 'Quitter', command= Fen.destroy)
-menubar.add_cascade(label= 'jeu', menu= menujeu)
+        #Menu
+        menubar = Menu(self.Fen)
 
-menuaide= Menu(menubar, tearoff= 0)
-menuaide.add_command(label = 'A propos', command= Apropos)
-menubar.add_cascade(label= 'Aide', menu= menuaide)
+        menujeu = Menu(menubar, tearoff = 0)
+        menujeu.add_command(label = 'Commencer', command = self.commencer)
+        menujeu.add_command(label = 'Quitter', command = self.Fen.destroy)
+        menubar.add_cascade(label = 'jeu', menu = menujeu)
 
-Fen.config(menu = menubar)
+        menuaide = Menu(menubar, tearoff = 0)
+        menuaide.add_command(label = 'A propos de nous', command = self.Apropos)
+        menubar.add_cascade(label = 'Aide', menu = menuaide)
 
-Canava = Canvas(Fen, width = Largeur, height= Hauteur, bg = 'black')
-Canava.pack(padx = 5, pady = 5)
+        self.Fen.config(menu = menubar)
 
-ZoneInfos = Frame(Fen)
-ZoneInfos.pack()
+        # Canevas
+        self.Canava = Canvas(self.Fen, width = Largeur, height = Hauteur, bg = 'black')
+        self.Canava.pack(padx = 5, pady = 5)
 
-AffScore = StringVar()
-AffScore.set('Score : 0')
-LabelScore = Label(ZoneInfos, textvariable= AffScore, font = ('Arial', 20))
-LabelScore.pack(side = 'left', padx =20, pady =5)
+        ZoneInfos = Frame(self.Fen)
+        ZoneInfos.pack()
 
-AffVie = StringVar()
-AffVie.set('Vie : 3')
-LabelVie = Label(ZoneInfos, textvariable= AffVie, font = ('Arial', 20))
-LabelVie.pack(side = 'left', padx =20, pady =5)
+        # Textes
+        self.AffScore = StringVar()
+        self.AffScore.set('Score : 0')
+        LabelScore = Label(ZoneInfos, textvariable = self.AffScore, font = ('Arial', 20))
+        LabelScore.pack(side = 'left', padx = 20, pady = 5)
 
-ZoneBoutons = Frame(Fen)
-ZoneBoutons.pack()
+        self.AffVie = StringVar()
+        self.AffVie.set('Vie : 3')
+        LabelVie = Label(ZoneInfos, textvariable = self.AffVie, font = ('Arial', 20))
+        LabelVie.pack(side = 'left', padx = 20, pady = 5)
 
-BouttonCommencer = Button(ZoneBoutons, text = 'Commencer')
-BouttonCommencer.pack(side = 'left', padx = 5, pady = 5)
-BouttonQuitter = Button(ZoneBoutons, text = 'Quitter', command = Fen.destroy)
-BouttonQuitter.pack(side = 'left', padx = 5, pady = 5)
+        # Boutons
+        ZoneBoutons = Frame(self.Fen)
+        ZoneBoutons.pack()
 
-Fen.mainloop()
+        BouttonCommencer = Button(ZoneBoutons, text = 'Commencer')
+        BouttonCommencer.pack(side = 'left', padx = 5, pady = 5)
+
+        BouttonQuitter = Button(ZoneBoutons, text = 'Quitter', command = self.Fen.destroy)
+        BouttonQuitter.pack(side = 'left', padx = 5, pady = 5)
+
+    def Apropos(self):
+        messagebox.showinfo('A propos', 'Développé par Nemo et Léandre ')
+
+    def AfficherInfos(self):
+        self.AffScore.set('Score : ' + str (self.Score))
+        self.AffVie.set('Vie :' + str(self.Vie))
+
+    def commencer(self):
+        self.AffScore.set('Score : 0')
+        self.AffVie.set('Vie : 3')
+
+    def AjouterPoints(self,points):
+        self.Score = self.Score + points
+        self.AfficherInfos()
+
+    def PerdreVie(self):
+        self.Vie = self.Vie - 1
+        self.AfficherInfos()
+
+    def lancer(self):
+        self.Fen.mainloop()
