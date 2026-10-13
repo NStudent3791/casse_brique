@@ -1,7 +1,6 @@
 from tkinter import *
-import main
+import balle
 from tkinter import messagebox
-import math, random
 
 import raquette
 Largeur = 1024
@@ -57,17 +56,9 @@ class Jeu:
         ZoneBoutons.pack()
 
         #balle
-        rayon = 15
-        x = Largeur / 2
-        y = Hauteur / 2
-        vitesse = 8
-        angle = random.uniform(0, 2 * math.pi)
-        dx = vitesse * math.cos(angle)
-        dy = vitesse * math.sin(angle)
-        balle = self.Canava.create_oval(x-rayon, y-rayon, x+rayon, y+rayon, fill = 'red')
+        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur)
+        self.balle.deplacer()
 
-        main.deplacement(self.Canava, self.Fen, balle, x, y, dx, dy, rayon, Largeur, Hauteur)
-        self.Fen.mainloop()
         BouttonCommencer = Button(ZoneBoutons, text = 'Commencer')
         BouttonCommencer.pack(side = 'left', padx = 5, pady = 5)
 
