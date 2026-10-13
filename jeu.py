@@ -78,7 +78,7 @@ class Jeu:
         ZoneBoutons.pack()
 
         #balle
-        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur)
+        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur, self.Raquette)
         self.balle.deplacer()
 
         BouttonCommencer = Button(ZoneBoutons, text = 'Commencer')

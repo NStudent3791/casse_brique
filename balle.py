@@ -2,10 +2,10 @@ import math
 import random
 
 class Balle:
-    def __init__(self, canevas, fenetre, largeur, hauteur):
+    def __init__(self, canevas, fenetre, largeur, hauteur, raquette):
         self.canevas = canevas
         self.fenetre = fenetre
-
+        self.raquette = raquette
         # Dimensions du terrain
         self.largeur = largeur
         self.hauteur = hauteur
@@ -42,6 +42,11 @@ class Balle:
         elif self.y + self.dy - self.rayon <= 0:
             self.y = self.rayon
             self.dy = abs(self.dy)
+
+        #collision avec la raquette :
+        if (self.dy > 0 and self.y + self.rayon <= self.raquette.PosY and self.y + self.dy + self.rayon >= self.raquette.PosY and self.x + self.dx + self.rayon >= self.raquette.PosX and self.x + self.dx - self.rayon <= self.raquette.PosX + self.raquette.Largeur):
+            self.y = self.raquette.PosY - self.rayon
+            self.dy = -abs(self.dy)
 
         # Mise à jour de la position
         self.x += self.dx
