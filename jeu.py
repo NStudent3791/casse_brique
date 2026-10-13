@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 import raquette
+import brique
+
 Largeur = 1024
 Hauteur = 768
 
@@ -32,8 +34,28 @@ class Jeu:
         
         # raquette
         self.Raquette = raquette.Raquette(self.Canava, Largeur, Hauteur)
-        # pour deplacer la raquette
+        # pour detecter les touches du clavier
         self.Fen.bind('<Key>', self.Raquette.Clavier)
+
+        # mur de brique 
+        self.Briques = []
+        # parametre du mur
+        NbBriques = 10
+        NbRangees = 5
+        Espace = 4
+        LargeurBrique = (Largeur - Espace * (NbBriques + 1)) / NbBriques
+        HauteurBrique = 25
+        Couleur = 'red'
+        # largeur calculee pour que les briques remplisset toute la largeur du canavas
+        for ligne in range(NbRangees):
+            #chaque rangee est placee sous la precedente
+            y = 50 + ligne * (HauteurBrique + Espace)
+            for i in range(NbBriques):
+                # chaque brique est placee a droite de la precedente
+                x = Espace + i * (LargeurBrique + Espace)
+                NouvelleBrique = brique.Brique(self.Canava, x, y, LargeurBrique, HauteurBrique, Couleur)
+                self.Briques.append(NouvelleBrique)
+
 
         ZoneInfos = Frame(self.Fen)
         ZoneInfos.pack()
@@ -80,3 +102,8 @@ class Jeu:
 
     def lancer(self):
         self.Fen.mainloop()
+
+    def CasserBrique(self, BriqueTouchee):
+        BriqueTouchee.Detruire()
+        self.Briques.remove(BriqueTouchee)
+        self.AjouterPoints(5)
