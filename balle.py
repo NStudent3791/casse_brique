@@ -44,9 +44,24 @@ class Balle:
             self.dy = abs(self.dy)
 
         #collision avec la raquette :
+
+        #dessus
         if (self.dy > 0 and self.y + self.rayon <= self.raquette.PosY and self.y + self.dy + self.rayon >= self.raquette.PosY and self.x + self.dx + self.rayon >= self.raquette.PosX and self.x + self.dx - self.rayon <= self.raquette.PosX + self.raquette.Largeur):
             self.y = self.raquette.PosY - self.rayon
             self.dy = -abs(self.dy)
+
+        # Cotés
+        if (self.y + self.rayon > self.raquette.PosY and self.y - self.rayon < self.raquette.PosY + self.raquette.Hauteur):
+
+            # Collision avec le côté gauche
+            if (self.dx > 0 and self.x + self.rayon <= self.raquette.PosX and self.x + self.dx + self.rayon >= self.raquette.PosX):
+                self.x = self.raquette.PosX - self.rayon
+                self.dx = -abs(self.dx)
+
+            # Collision avec le côté droit
+            elif (self.dx < 0 and self.x - self.rayon >= self.raquette.PosX + self.raquette.Largeur and self.x + self.dx - self.rayon <= self.raquette.PosX + self.raquette.Largeur):
+                self.x = self.raquette.PosX + self.raquette.Largeur + self.rayon
+                self.dx = abs(self.dx)
 
         # Mise à jour de la position
         self.x += self.dx
