@@ -1,5 +1,7 @@
 from tkinter import *
+import balle
 from tkinter import messagebox
+
 import raquette
 import brique
 
@@ -75,6 +77,10 @@ class Jeu:
         ZoneBoutons = Frame(self.Fen)
         ZoneBoutons.pack()
 
+        #balle
+        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur)
+        self.balle.deplacer()
+
         BouttonCommencer = Button(ZoneBoutons, text = 'Commencer')
         BouttonCommencer.pack(side = 'left', padx = 5, pady = 5)
 
@@ -102,8 +108,3 @@ class Jeu:
 
     def lancer(self):
         self.Fen.mainloop()
-
-    def CasserBrique(self, BriqueTouchee):
-        BriqueTouchee.Detruire()
-        self.Briques.remove(BriqueTouchee)
-        self.AjouterPoints(5)
