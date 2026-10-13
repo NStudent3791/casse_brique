@@ -23,3 +23,14 @@ def deplacement(caneva, fenetre, objet, x, y, dx, dy, rayon, largeur, hauteur) :
 
     caneva.coords(objet, x-rayon, y-rayon, x+rayon, y+rayon)
     fenetre.after(20, deplacement, caneva, fenetre, objet, x, y, dx, dy, rayon, largeur, hauteur)
+import jeu
+
+partie = jeu.Jeu()
+
+#test
+"""partie.AjouterPoints(20)
+partie.PerdreVie()
+partie.PerdreVie()"""
+
+partie.lancer()
+
