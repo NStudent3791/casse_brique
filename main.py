@@ -1,3 +1,4 @@
+from tkinter import *
 import jeu
 
 partie = jeu.Jeu()
