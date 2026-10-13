@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import raquette
 Largeur = 1024
 Hauteur = 768
 
@@ -11,7 +12,7 @@ class Jeu:
         self.Score = 0
         self.Vie = 3
 
-        #Menu
+        # menu
         menubar = Menu(self.Fen)
 
         menujeu = Menu(menubar, tearoff = 0)
@@ -25,14 +26,19 @@ class Jeu:
 
         self.Fen.config(menu = menubar)
 
-        # Canevas
+        # caneva
         self.Canava = Canvas(self.Fen, width = Largeur, height = Hauteur, bg = 'black')
         self.Canava.pack(padx = 5, pady = 5)
+        
+        # raquette
+        self.Raquette = raquette.Raquette(self.Canava, Largeur, Hauteur)
+        # pour deplacer la raquette
+        self.Fen.bind('<Key>', self.Raquette.Clavier)
 
         ZoneInfos = Frame(self.Fen)
         ZoneInfos.pack()
 
-        # Textes
+        # texts
         self.AffScore = StringVar()
         self.AffScore.set('Score : 0')
         LabelScore = Label(ZoneInfos, textvariable = self.AffScore, font = ('Arial', 20))
@@ -43,7 +49,7 @@ class Jeu:
         LabelVie = Label(ZoneInfos, textvariable = self.AffVie, font = ('Arial', 20))
         LabelVie.pack(side = 'left', padx = 20, pady = 5)
 
-        # Boutons
+        # boutons
         ZoneBoutons = Frame(self.Fen)
         ZoneBoutons.pack()
 
