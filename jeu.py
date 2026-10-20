@@ -79,7 +79,8 @@ class Jeu:
 
         #balle
         self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur)
-        self.balle.deplacer()
+        # demarrage de la boucle du jeu (une seule fois)
+        self.BoucleJeu()
 
         BouttonCommencer = Button(ZoneBoutons, text = 'Commencer')
         BouttonCommencer.pack(side = 'left', padx = 5, pady = 5)
@@ -92,11 +93,12 @@ class Jeu:
 
     def AfficherInfos(self):
         self.AffScore.set('Score : ' + str (self.Score))
-        self.AffVie.set('Vie :' + str(self.Vie))
+        self.AffVie.set('Vie : ' + str(self.Vie))
 
     def commencer(self):
-        self.AffScore.set('Score : 0')
-        self.AffVie.set('Vie : 3')
+        self.Score = 0
+        self.Vie = 3
+        self.AfficherInfos()
 
     def AjouterPoints(self,points):
         self.Score = self.Score + points
@@ -105,6 +107,34 @@ class Jeu:
     def PerdreVie(self):
         self.Vie = self.Vie - 1
         self.AfficherInfos()
+
+    def CasserBrique(self, BriqueTouchee):
+        # casse une brique et le joueur gagne 5 points
+        BriqueTouchee.Detruire()
+        self.Briques.remove(BriqueTouchee)
+        self.AjouterPoints(5)
+
+    def BoucleJeu(self):
+        # fait avancer la balle et gere les collisions, 50 fois par seconde
+        self.balle.deplacer()
+
+        # rebond sur la raquette
+        if self.balle.dy > 0 and self.Raquette.Touche(self.balle.x, self.balle.y, self.balle.rayon):
+            self.balle.dy = -self.balle.dy
+
+        # collision avec les briques
+        for b in self.Briques:
+            if b.Touche(self.balle.x, self.balle.y, self.balle.rayon):
+                # rebond par le dessus ou dessous ou par le cote
+                if b.PosX <= self.balle.x <= b.PosX + b.Largeur:
+                    self.balle.dy = -self.balle.dy
+                else:
+                    self.balle.dx = -self.balle.dx
+                self.CasserBrique(b)
+                break
+
+        # tour suivant dans 20 millisecondes
+        self.Fen.after(20, self.BoucleJeu)
 
     def lancer(self):
         self.Fen.mainloop()

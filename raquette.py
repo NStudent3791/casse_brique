@@ -19,11 +19,28 @@ class Raquette:
             self.PosX = self.PosX - 20
         if touche == 'Right':
             self.PosX = self.PosX + 20
-        ## bloque a gauche
+        # bloque a gauche
         if self.PosX < 0:
             self.PosX = 0
-        ## bloque a droite
+        # bloque a droite
         if self.PosX > self.LargeurCanevas - self.Largeur:
             self.PosX = self.LargeurCanevas - self.Largeur
-        # changement de coordonnées si bouton appuye
+        # changement de coordonnées si bouton appuyee
         self.Canava.coords(self.Rectangle, self.PosX, self.PosY, self.PosX + self.Largeur, self.PosY + self.Hauteur)
+
+    def Touche(self, x, y, rayon):
+        # renvoie True si la balle (centre x, y et rayon) touche la raquette
+        # la balle est entierement a gauche de la raquette
+        if x + rayon < self.PosX:
+            return False
+        # entierement a droite
+        if x - rayon > self.PosX + self.Largeur:
+            return False
+        # entierement au-dessus
+        if y + rayon < self.PosY:
+            return False
+        # entierement en dessous
+        if y - rayon > self.PosY + self.Hauteur:
+            return False
+        # sinon, elle touche
+        return True

@@ -13,3 +13,20 @@ class Brique:
     def Detruire(self):
         # efface la brique de canava 
         self.Canava.delete(self.Rectangle)
+
+    def Touche(self, x, y, rayon):
+        # renvoie True si la balle (centre x, y et rayon) touche la brique
+        # la balle est entierement a gauche de la brique
+        if x + rayon < self.PosX:
+            return False
+        # entierement a droite
+        if x - rayon > self.PosX + self.Largeur:
+            return False
+        # entierement au dessus
+        if y + rayon < self.PosY:
+            return False
+        # entierement en dessous
+        if y - rayon > self.PosY + self.Hauteur:
+            return False
+        # sinon, elle touche
+        return True

@@ -49,6 +49,3 @@ class Balle:
 
         # Mise à jour du dessin
         self.canevas.coords(self.identifiant, self.x - self.rayon, self.y - self.rayon, self.x + self.rayon, self.y + self.rayon)
-
-        # Prochain déplacement
-        self.fenetre.after(20, self.deplacer)
