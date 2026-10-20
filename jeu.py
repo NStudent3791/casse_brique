@@ -78,7 +78,7 @@ class Jeu:
         ZoneBoutons.pack()
 
         #balle
-        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur)
+        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur, self.Raquette)
         # demarrage de la boucle du jeu (une seule fois)
         self.BoucleJeu()
 
