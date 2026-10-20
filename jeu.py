@@ -147,8 +147,8 @@ class Jeu:
         BriqueTouchee.Detruire()
         self.Briques.remove(BriqueTouchee)
         self.AjouterPoints(5)
-        # tous les 25 points (donc toutes les 5 briques), la balle accelere
-        if self.Score % 25 == 0:
+        # tous les 20 points, la balle accelere
+        if self.Score % 20 == 0:
             self.balle.Accelerer()
 
     def BoucleJeu(self):
@@ -171,7 +171,6 @@ class Jeu:
                 break
 
         # tour suivant dans 20 millisecondes
-        # (on garde le numero de ce rendez-vous pour pouvoir l'annuler)
         self.Boucle = self.Fen.after(20, self.BoucleJeu)
 
     def lancer(self):
