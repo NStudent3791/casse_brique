@@ -1,7 +1,7 @@
 from tkinter import *
 import balle
 from tkinter import messagebox
-
+import pile
 import raquette
 import brique
 
@@ -14,7 +14,6 @@ class Jeu:
         self.Fen = Tk()
         self.Fen.title('Jeux casse brique')
         self.Score = 0
-        self.Vie = 3
         # la partie n'a pas encore commence : la balle ne bouge pas
         self.EnCours = False
         
@@ -48,6 +47,9 @@ class Jeu:
 
         # mur de briques
         self.CreerMur()
+        # vies : une pile de 3 coeurs en haut a droite
+        self.Vies = pile.Pile()
+        self.CreerVies()
 
 
         ZoneInfos = Frame(self.Fen)
@@ -58,11 +60,6 @@ class Jeu:
         self.AffScore.set('Score : 0')
         LabelScore = Label(ZoneInfos, textvariable = self.AffScore, font = ('Arial', 20))
         LabelScore.pack(side = 'left', padx = 20, pady = 5)
-
-        self.AffVie = StringVar()
-        self.AffVie.set('Vie : 3')
-        LabelVie = Label(ZoneInfos, textvariable = self.AffVie, font = ('Arial', 20))
-        LabelVie.pack(side = 'left', padx = 20, pady = 5)
 
         # boutons
         ZoneBoutons = Frame(self.Fen)
@@ -85,17 +82,21 @@ class Jeu:
 
     def AfficherInfos(self):
         self.AffScore.set('Score : ' + str (self.Score))
-        self.AffVie.set('Vie : ' + str(self.Vie))
 
     def commencer(self):
-        # demarre la partie, seulement si elle n'est pas deja en cours
-        if self.EnCours == False:
+        # demarre seulement s'il reste des vies et des briques
+        if self.EnCours == False and self.Vies.Est_vide() == False and len(self.Briques) > 0:
             self.EnCours = True
-            self.Score = 0
-            self.Vie = 3
-            self.AfficherInfos()
-            # demarrage de la boucle du jeu
             self.BoucleJeu()
+
+    def CreerVies(self):
+        # vide la pile, puis empile 3 nouveaux coeurs
+        while self.Vies.Est_vide() == False:
+            self.Canava.delete(self.Vies.Depiler())
+        for i in range(3):
+            x = Largeur - 90 + i * 30
+            coeur = self.Canava.create_oval(x - 10, 15, x + 10, 35, fill = 'red', outline = 'white')
+            self.Vies.Empiler(coeur)
 
     def CreerMur(self):
         # cree le mur de briques et range toutes les briques dans une liste
@@ -137,7 +138,7 @@ class Jeu:
 
         #score et vies remis a zero
         self.Score = 0
-        self.Vie = 3
+        self.CreerVies()
         self.AfficherInfos()
 
     def AjouterPoints(self,points):
@@ -145,7 +146,9 @@ class Jeu:
         self.AfficherInfos()
 
     def PerdreVie(self):
-        self.Vie = self.Vie - 1
+        # on depile le coeur du sommet et on l'efface
+        coeur = self.Vies.Depiler()
+        self.Canava.delete(coeur)
         self.AfficherInfos()
 
     def RelancerBalle(self):
@@ -211,7 +214,7 @@ class Jeu:
         # La balle est sortie par le bas
         if self.balle.y - self.balle.rayon > Hauteur:
             self.PerdreVie()
-            if self.Vie <= 0:
+            if self.Vies.Est_vide():
                 self.EnCours = False
                 self.AfficherFin(False)
                 return
