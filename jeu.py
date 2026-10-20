@@ -6,7 +6,7 @@ import raquette
 import brique
 
 Largeur = 1024
-Hauteur = 768
+Hauteur = 600
 
 class Jeu:
     def __init__(self):
