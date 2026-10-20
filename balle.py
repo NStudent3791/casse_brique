@@ -14,11 +14,12 @@ class Balle:
         # Caractéristiques de la balle
         self.rayon = 15
         self.vitesse = 8
+        self.vitesse_max = 12
 
         self.x = largeur / 2
         self.y = hauteur / 2
 
-        angle = random.uniform(0, 2 * math.pi)
+        angle = math.radians(random.uniform(225, 315))
         self.dx = self.vitesse * math.cos(angle)
         self.dy = self.vitesse * math.sin(angle)
 
@@ -63,3 +64,12 @@ class Balle:
 
         # Mise à jour du dessin
         self.canevas.coords(self.identifiant, self.x - self.rayon, self.y - self.rayon, self.x + self.rayon, self.y + self.rayon)
+        
+    def Accelerer(self):
+        # augmente la vitesse de la balle de 1, sans changer sa direction
+        if self.vitesse < self.vitesse_max:
+            # dx et dy grandissent dans la meme proportion que la vitesse
+            facteur = (self.vitesse + 1) / self.vitesse
+            self.dx = self.dx * facteur
+            self.dy = self.dy * facteur
+            self.vitesse = self.vitesse + 1
