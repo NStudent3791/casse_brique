@@ -36,10 +36,7 @@ class Balle:
             self.x = self.rayon
             self.dx = abs(self.dx)
 
-        # Rebonds verticaux
-        if self.y + self.dy + self.rayon >= self.hauteur:
-            self.y = self.hauteur - self.rayon
-            self.dy = -abs(self.dy)
+        # Rebonds en haut
 
         elif self.y + self.dy - self.rayon <= 0:
             self.y = self.rayon

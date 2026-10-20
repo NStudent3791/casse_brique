@@ -17,6 +17,10 @@ class Jeu:
         self.Vie = 3
         # la partie n'a pas encore commence : la balle ne bouge pas
         self.EnCours = False
+        
+        self.ElementsFin = []
+        self.BoutonFin = None
+
 
         # menu
         menubar = Menu(self.Fen)
@@ -114,6 +118,8 @@ class Jeu:
                 self.Briques.append(NouvelleBrique)
 
     def recommencer(self):
+        self.NettoyerFin()
+        
         # remet le jeu comme au lancement
         #on arrete la boucle du jeu si elle tourne
         if self.EnCours == True:
@@ -142,6 +148,10 @@ class Jeu:
         self.Vie = self.Vie - 1
         self.AfficherInfos()
 
+    def RelancerBalle(self):
+        self.Canava.delete(self.balle.identifiant)
+        self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur, self.Raquette)
+
     def CasserBrique(self, BriqueTouchee):
         # casse une brique et le joueur gagne 5 points
         BriqueTouchee.Detruire()
@@ -151,9 +161,63 @@ class Jeu:
         if self.Score % 20 == 0:
             self.balle.Accelerer()
 
+    
+    def NettoyerFin(self):
+        for element in self.ElementsFin:
+            self.Canava.delete(element)
+        self.ElementsFin = []
+        if self.BoutonFin is not None:
+            self.BoutonFin.destroy()
+            self.BoutonFin = None
+
+    def AfficherFin(self, victoire):
+        self.NettoyerFin()
+
+        if victoire:
+            texte = "VICTOIRE !"
+            texte_bouton = "Niveau suivant"
+            commande = self.NiveauSuivant
+        else:
+            texte = "GAME OVER"
+            texte_bouton = "Recommencer"
+            commande = self.recommencer
+
+        fond = self.Canava.create_rectangle(250, 200, 774, 400, fill="white", outline="white")
+        titre = self.Canava.create_text(Largeur / 2, 250, text=texte, fill="black", font=("Arial", 32, "bold"))
+        score = self.Canava.create_text(Largeur / 2, 300, text=f"Score : {self.Score}", fill="black", font=("Arial", 18))
+
+        self.BoutonFin = Button(self.Fen, text=texte_bouton, command=commande)
+        bouton = self.Canava.create_window(Largeur / 2, 350, window=self.BoutonFin)
+        self.ElementsFin = [fond, titre, score, bouton]
+
+    
+    def NiveauSuivant(self):
+        self.NettoyerFin()
+
+        for b in self.Briques:
+            b.Detruire()
+
+        self.CreerMur()
+        self.RelancerBalle()
+
+        self.EnCours = True
+        self.BoucleJeu()
+
+
     def BoucleJeu(self):
         # fait avancer la balle et gere les collisions, 50 fois par seconde
         self.balle.deplacer()
+
+        # La balle est sortie par le bas
+        if self.balle.y - self.balle.rayon > Hauteur:
+            self.PerdreVie()
+            if self.Vie <= 0:
+                self.EnCours = False
+                self.AfficherFin(False)
+                return
+            self.RelancerBalle()
+            self.Boucle = self.Fen.after(20, self.BoucleJeu)
+            return
 
         # rebond sur la raquette
         if self.balle.dy > 0 and self.Raquette.Touche(self.balle.x, self.balle.y, self.balle.rayon):
@@ -170,6 +234,14 @@ class Jeu:
                 self.CasserBrique(b)
                 break
 
+        
+        # Victoire si toutes les briques sont detruites
+        if len(self.Briques) == 0:
+            self.EnCours = False
+            self.AfficherFin(True)
+            return
+
+        
         # tour suivant dans 20 millisecondes
         self.Boucle = self.Fen.after(20, self.BoucleJeu)
 
