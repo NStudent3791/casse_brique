@@ -5,6 +5,8 @@ from tkinter import messagebox
 import pile
 import raquette
 import brique
+import winsound
+import os
 
 Largeur = 1024
 Hauteur = 600
@@ -41,7 +43,7 @@ class Jeu:
         menujeu = Menu(menubar, tearoff = 0)
         menujeu.add_command(label = 'Commencer', command = self.commencer)
         menujeu.add_command(label = 'Recommencer', command = self.recommencer)
-        menujeu.add_command(label = 'Quitter', command = self.Fen.destroy)
+        menujeu.add_command(label = 'Quitter', command = self.Quitter)
         menubar.add_cascade(label = 'jeu', menu = menujeu)
 
         menuaide = Menu(menubar, tearoff = 0)
@@ -99,6 +101,9 @@ class Jeu:
         # boutons
         ZoneBoutons = Frame(self.Fen)
         ZoneBoutons.pack()
+        self.BoutonMusique = Button(ZoneBoutons, text="Musique : OFF", command=self.BasculerMusique)
+
+        self.BoutonMusique.pack(side='left', padx=5, pady=5)
 
         #balle
         self.balle = balle.Balle(self.Canava, self.Fen, Largeur, Hauteur, self.Raquette, self.VitesseBase)
@@ -108,9 +113,47 @@ class Jeu:
         BouttonRecommencer = Button(ZoneBoutons, text = 'Recommencer', command = self.recommencer)
         BouttonRecommencer.pack(side = 'left', padx = 5, pady = 5)
 
-        BouttonQuitter = Button(ZoneBoutons, text = 'Quitter', command = self.Fen.destroy)
+        BouttonQuitter = Button(ZoneBoutons, text = 'Quitter', command = self.Quitter)
         BouttonQuitter.pack(side = 'left', padx = 5, pady = 5)
 
+        #musique
+        self.FichierMusique = os.path.join(os.path.dirname(__file__), "masterpepemusic.wav")
+
+        self.MusiqueActive = False
+
+    def Quitter(self):
+
+        if self.MusiqueActive:
+            winsound.PlaySound(None, winsound.SND_PURGE)
+
+        self.Fen.destroy()
+
+    def BasculerMusique(self):
+
+        if self.MusiqueActive:
+
+            # Arrête la musique
+            winsound.PlaySound(None, winsound.SND_PURGE)
+
+            self.MusiqueActive = False
+            self.BoutonMusique.config(text="Musique : OFF")
+
+        else:
+
+            # Vérifie que le fichier existe
+            if not os.path.exists(self.FichierMusique):
+                messagebox.showwarning("Musique", "Le fichier musique.wav est introuvable.")
+                return
+
+            try:
+                # Lance la musique en boucle
+                winsound.PlaySound(self.FichierMusique, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_LOOP)
+
+                self.MusiqueActive = True
+                self.BoutonMusique.config(text="Musique : ON")
+
+            except RuntimeError:
+                messagebox.showwarning("Musique", "Impossible de lire ce fichier audio.")
 
     def FondJeu(self):
 
