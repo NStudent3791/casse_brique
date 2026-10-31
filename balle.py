@@ -2,7 +2,7 @@ import math
 import random
 
 class Balle:
-    def __init__(self, canevas, fenetre, largeur, hauteur,raquette):
+    def __init__(self, canevas, fenetre, largeur, hauteur, raquette, vitesse_initiale=8):
         self.canevas = canevas
         self.fenetre = fenetre
 
@@ -13,18 +13,27 @@ class Balle:
 
         # Caractéristiques de la balle
         self.rayon = 15
-        self.vitesse = 8
-        self.vitesse_max = 12
+        self.vitesse = vitesse_initiale
+        self.vitesse_max = vitesse_initiale + 4
 
         self.x = largeur / 2
         self.y = hauteur / 2
 
-        angle = math.radians(random.uniform(225, 315))
+        # Choisit aléatoirement une direction
+        if random.choice([True, False]):
+            angle = random.uniform(210, 240)
+        else:
+            angle = random.uniform(300, 330)
+
+        # Convertit l'angle en radians
+        angle = math.radians(angle)
+
+        # Calcule les composantes de la vitesse
         self.dx = self.vitesse * math.cos(angle)
         self.dy = self.vitesse * math.sin(angle)
 
         # Création du dessin sur le canevas
-        self.identifiant = self.canevas.create_oval(self.x - self.rayon, self.y - self.rayon, self.x + self.rayon, self.y + self.rayon, fill="red")
+        self.identifiant = self.canevas.create_oval(self.x - self.rayon, self.y - self.rayon, self.x + self.rayon, self.y + self.rayon, fill="#00E5FF")
 
     def deplacer(self) :
         # Rebonds horizontaux
