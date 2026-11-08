@@ -1,7 +1,7 @@
 # Développement d’un jeu : Casse brique pour CPE Lyon
 Bînome: **Nemo CHARPENTIER, Leandre GOSSELIN**
 
-Github: *https://github.com/NStudent3791/casse_brique/tree/dev-leandre_gestionparties*
+Github: *https://github.com/NStudent3791/casse_brique/tree/main*
 
 ## Pour Lancer le jeu 
 Python + tkinter        
